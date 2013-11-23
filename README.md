@@ -1,5 +1,8 @@
+Glitch Effect (in JS)
+=====================
+
 Description
-===========
+-----------
 This script simulates the effect of a transmission glitch.
 
 Current version is quite basic:
