@@ -21,7 +21,7 @@ Because it's quite a basic script, it has some limitations.
 
 Demos:
 ------
-* At [this page](http://93.114.42.133/~sandu/glitch_test/ "Glitch test page")
+* At [this page](http://rank24.net/~sandu/glitch_test/ "Glitch test page")
 
 Praises and recognition
 -----------------------
