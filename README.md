@@ -1,4 +1,4 @@
-Glitch Effect (in JS)
+Glitch Effect (in JavaScript)
 =====================
 
 Description
