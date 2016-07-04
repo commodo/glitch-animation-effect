@@ -1,7 +1,11 @@
 //================================================================================================= GLITCH
 
+/* Global config settings */
 var NR_OF_GLITCHED_CANVASES = 7;
 var TOTAL_TIMES_TO_RENDER   = 30;
+var GLITCH_INTERVAL_PROGRESSIVE = 1;
+var GLITCH_INTERVAL_MIN     = 500; /* millisecs */
+var GLITCH_INTERVAL_MAX     = 1500; /* millisecs */
 
 var rendered_canvases = 0;
 var times_rendered    = 0;
@@ -49,8 +53,10 @@ function render_glitches() {
            rendered_canvases = 0;
            if (DELAY_BETWEEN_GLITCHES > 0)
               setTimeout(render_glitches, DELAY_BETWEEN_GLITCHES);
-           else
+           else if (GLITCH_INTERVAL_PROGRESSIVE)
               setTimeout(render_glitches, times_rendered * getRandomInt(500, 1500));
+           else
+              setTimeout(render_glitches, getRandomInt(GLITCH_INTERVAL_MIN, GLITCH_INTERVAL_MAX));
            curr_canvas = null;
        }
    }
