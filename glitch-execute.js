@@ -13,7 +13,11 @@ glitch_exec = {
     GLITCH_INTERVAL_MAX     : 1500, /* millisecs */
     DELAY_BETWEEN_FRAMES    : 30,  /* 30 milisecs delay */
     DELAY_BETWEEN_GLITCHES  : 0,
+    GLITCH_REFRESH_FRAMES_INTERVAL : 1, /* refresh glitched frames after N glitches ; 0 disables this */
 
+    /* From here on, it's just internal stuff */
+
+    refresh_glitch_frames_counter : 0,
     rendered_canvases : 0,
     times_rendered    : 0,
     glitched_canvases : Array(),
@@ -45,11 +49,17 @@ glitch_exec = {
             else
                 setTimeout(gl.__state_machine, getRandomInt(gl.GLITCH_INTERVAL_MIN, gl.GLITCH_INTERVAL_MAX));
             gl.curr_canvas = null;
+
+            if (gl.GLITCH_REFRESH_FRAMES_INTERVAL > 0 && --gl.refresh_glitch_frames_counter <= 0) {
+                gl.glitch_frames();
+                gl.refresh_glitch_frames_counter = gl.GLITCH_REFRESH_FRAMES_INTERVAL;
+            }
         }
     },
 
-    start: function() {
+    glitch_frames : function() {
         var gl = glitch_exec;
+        gl.glitched_canvases = Array();
         for(var i = 0; i < gl.NR_OF_GLITCHED_CANVASES; ++i) {
             glitch(document.body, {
                 amount: i,
@@ -61,6 +71,11 @@ glitch_exec = {
                 }
             });
         }
+    },
+
+    start: function() {
+        var gl = glitch_exec;
+        gl.glitch_frames();
         gl.__state_machine();
     }
 
