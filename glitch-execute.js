@@ -23,31 +23,31 @@ glitch_exec = {
     glitched_canvases : Array(),
     curr_canvas       : null,
 
-    __state_machine: function() {
-        var gl = glitch_exec;
+    __state_machine: function(gl) {
+        var otg = gl.object_to_glitch;
 
         /* If we need to render only a few times and stop, return here */
         if (gl.GLITCH_RENDER_COUNT > 0 && gl.times_rendered >= gl.GLITCH_RENDER_COUNT)
             return;
 
         if (gl.curr_canvas != null) {
-            document.body.removeChild(gl.curr_canvas);
+            otg.removeChild(gl.curr_canvas);
         }
         if ((0 < gl.glitched_canvases.length) && (gl.rendered_canvases < gl.glitched_canvases.length)) {
             gl.curr_canvas = gl.glitched_canvases[gl.rendered_canvases];
-            document.body.insertBefore(gl.curr_canvas, document.body.firstChild);
+            otg.insertBefore(gl.curr_canvas, otg.firstChild);
             gl.rendered_canvases++;
-            setTimeout(gl.__state_machine, gl.DELAY_BETWEEN_FRAMES);
+            setTimeout(function() { gl.__state_machine(gl) }, gl.DELAY_BETWEEN_FRAMES);
         } else {
             if (gl.GLITCH_RENDER_COUNT > 0 && gl.rendered_canvases >= gl.glitched_canvases.length)
                 gl.times_rendered ++;
             gl.rendered_canvases = 0;
             if (gl.DELAY_BETWEEN_GLITCHES > 0)
-                setTimeout(gl.__state_machine, gl.DELAY_BETWEEN_GLITCHES);
+                setTimeout(function() { gl.__state_machine(gl) }, gl.DELAY_BETWEEN_GLITCHES);
             else if (gl.GLITCH_INTERVAL_PROGRESSIVE && gl.GLITCH_RENDER_COUNT > 0)
-                setTimeout(gl.__state_machine, gl.times_rendered * getRandomInt(500, 1500));
+                setTimeout(function() { gl.__state_machine(gl) }, gl.times_rendered * getRandomInt(500, 1500));
             else
-                setTimeout(gl.__state_machine, getRandomInt(gl.GLITCH_INTERVAL_MIN, gl.GLITCH_INTERVAL_MAX));
+                setTimeout(function() { gl.__state_machine(gl) }, getRandomInt(gl.GLITCH_INTERVAL_MIN, gl.GLITCH_INTERVAL_MAX));
             gl.curr_canvas = null;
 
             if (gl.GLITCH_REFRESH_FRAMES_INTERVAL > 0 && --gl.refresh_glitch_frames_counter <= 0) {
@@ -58,10 +58,10 @@ glitch_exec = {
     },
 
     glitch_frames : function() {
-        var gl = glitch_exec;
+        var gl = this;
         gl.glitched_canvases = Array();
         for(var i = 0; i < gl.NR_OF_GLITCHED_CANVASES; ++i) {
-            glitch(document.body, {
+            glitch(gl.object_to_glitch, {
                 amount: i,
                 complete: function(canvas) {
                     gl.glitched_canvases.push(canvas);
@@ -73,14 +73,18 @@ glitch_exec = {
         }
     },
 
-    start: function() {
-        var gl = glitch_exec;
+    start: function(obj_to_glitch) {
+        var gl = this;
+        gl.object_to_glitch = obj_to_glitch;
         gl.glitch_frames();
-        gl.__state_machine();
+        gl.__state_machine(gl);
     }
 
 };
 
-window.onload = glitch_exec.start;
+window.onload = function() {
+    var gl = Object.create(glitch_exec);
+    gl.start(document.body);
+}
 
 //================================================================================================= END
