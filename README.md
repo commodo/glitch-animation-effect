@@ -21,7 +21,8 @@ Because it's quite a basic script, it has some limitations.
 
 Demos:
 ------
-* At [this page](http://rank24.net/~sandu/glitch_test/ "Glitch test page")
+* [Glitch an entire page](http://rank24.net/~sandu/glitch_test/ "Glitch test page")
+* [Glitch individual elements](http://rank24.net/~sandu/glitch_test/index2.html "Glitch test page")
 
 Praises and recognition
 -----------------------
