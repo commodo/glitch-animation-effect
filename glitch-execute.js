@@ -83,9 +83,4 @@ glitch_exec = {
 
 };
 
-window.onload = function() {
-    var gl = Object.create(glitch_exec);
-    gl.start(document.body);
-}
-
 //================================================================================================= END
