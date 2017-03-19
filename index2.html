@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>Glitch Test - Simulating transmission glitch (individual divs)</title>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <script type="text/javascript" src="html2canvas.js"></script>
+        <script type="text/javascript" src="glitch-lib.js"></script>
+        <script type="text/javascript" src="glitch-execute.js"></script>
+    </head>
+    <body>
+        <div id="lenna1">
+            <img src="lenna.png" />
+        </div>
+        <br>
+
+        <div id="lenna2">
+            <img src="lenna.png" />
+        </div>
+
+        <br>
+
+        <div id="lenna3">
+            <img src="lenna.png" />
+        </div>
+
+        <br>
+
+        <div id="lenna4">
+            <img src="lenna.png" />
+        </div>
+
+        <script type="text/javascript">
+            window.onload = function() {
+                var gl1 = Object.create(glitch_exec);
+                gl1.start(document.getElementById("lenna1"));
+
+                var gl2 = Object.create(glitch_exec);
+                gl2.start(document.getElementById("lenna2"));
+
+                var gl3 = Object.create(glitch_exec);
+                gl3.start(document.getElementById("lenna3"));
+
+                var gl4 = Object.create(glitch_exec);
+                gl4.start(document.getElementById("lenna4"));
+            }
+        </script>
+    </body>
+</html>
