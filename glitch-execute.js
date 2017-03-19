@@ -27,8 +27,11 @@ glitch_exec = {
         var otg = gl.object_to_glitch;
 
         /* If we need to render only a few times and stop, return here */
-        if (gl.GLITCH_RENDER_COUNT > 0 && gl.times_rendered >= gl.GLITCH_RENDER_COUNT)
+        if (gl.GLITCH_RENDER_COUNT > 0 && gl.times_rendered >= gl.GLITCH_RENDER_COUNT) {
+            if (typeof gl.done_callback == "function")
+                gl.done_callback();
             return;
+        }
 
         if (gl.curr_canvas != null) {
             otg.removeChild(gl.curr_canvas);

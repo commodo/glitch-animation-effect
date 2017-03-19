@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>Glitch Test - Simulate transmission glitch (whole page) - with stop callback</title>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <script type="text/javascript" src="html2canvas.js"></script>
+        <script type="text/javascript" src="glitch-lib.js"></script>
+        <script type="text/javascript" src="glitch-execute.js"></script>
+    </head>
+    <body>
+        <img src="lenna.png" />
+        <img src="lenna.png" />
+        <br>
+        <img src="lenna.png" />
+        <img src="lenna.png" />
+        <script type="text/javascript">
+            window.onload = function() {
+                var gl = Object.create(glitch_exec);
+                gl.GLITCH_RENDER_COUNT = 3;
+                gl.done_callback = function() {
+                    alert("Stopped Glitching");
+                }
+                gl.start(document.body);
+            }
+        </script>
+    </body>
+</html>
