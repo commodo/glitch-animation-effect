@@ -64,10 +64,11 @@ glitch_exec = {
             glitch(gl.object_to_glitch, {
                 amount: i,
                 complete: function(canvas) {
+                    var otg = gl.object_to_glitch;
                     gl.glitched_canvases.push(canvas);
                     canvas.style.position = "absolute";
-                    canvas.style.top = 0;
-                    canvas.style.left = 0;
+                    canvas.style.top = otg.top;
+                    canvas.style.left = otg.left;
                 }
             });
         }
