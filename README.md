@@ -21,9 +21,9 @@ Because it's quite a basic script, it has some limitations.
 
 Demos:
 ------
-* [Glitch an entire page](http://lgtm.ro/~sandu/glitch_test/ "Glitch test page")
-* [Glitch individual elements](http://lgtm.ro/~sandu/glitch_test/index2.html "Glitch test page")
-* [Glitch an entire page 3 times and stop](http://lgtm.ro/~sandu/glitch_test/index3.html "Glitch test page")
+* [Glitch an entire page](http://207.154.195.207/~sandu/glitch_test/ "Glitch test page")
+* [Glitch individual elements](http://207.154.195.207/~sandu/glitch_test/index2.html "Glitch test page")
+* [Glitch an entire page 3 times and stop](http://207.154.195.207/~sandu/glitch_test/index3.html "Glitch test page")
 
 Praises and recognition
 -----------------------
