@@ -2128,53 +2128,6 @@ _html2canvas.Preload = function( options ) {
         }
     }
 
-    // TODO modify proxy to serve images with CORS enabled, where available
-    function proxyGetImage(url, img, imageObj){
-        var callback_name,
-        scriptUrl = options.proxy,
-        script;
-
-        link.href = url;
-        url = link.href; // work around for pages with base href="" set - WARNING: this may change the url
-
-        callback_name = 'html2canvas_' + (count++);
-        imageObj.callbackname = callback_name;
-
-        if (scriptUrl.indexOf("?") > -1) {
-            scriptUrl += "&";
-        } else {
-            scriptUrl += "?";
-        }
-        scriptUrl += 'url=' + encodeURIComponent(url) + '&callback=' + callback_name;
-        script = doc.createElement("script");
-
-        window[callback_name] = function(a){
-            if (a.substring(0,6) === "error:"){
-                imageObj.succeeded = false;
-                images.numLoaded++;
-                images.numFailed++;
-                start();
-            } else {
-                setImageLoadHandlers(img, imageObj);
-                img.src = a;
-            }
-            window[callback_name] = undefined; // to work with IE<9  // NOTE: that the undefined callback property-name still exists on the window object (for IE<9)
-            try {
-                delete window[callback_name];  // for all browser that support this
-            } catch(ex) {}
-            script.parentNode.removeChild(script);
-            script = null;
-            delete imageObj.script;
-            delete imageObj.callbackname;
-        };
-
-        script.setAttribute("type", "text/javascript");
-        script.setAttribute("src", scriptUrl);
-        imageObj.script = script;
-        window.document.body.appendChild(script);
-
-    }
-
     function getImages (el) {
 
 
@@ -2268,17 +2221,6 @@ _html2canvas.Preload = function( options ) {
             if (img.crossOrigin === "anonymous") {
                 // CORS failed
                 window.clearTimeout( imageObj.timer );
-
-                // let's try with proxy instead
-                if ( options.proxy ) {
-                    var src = img.src;
-                    img = new Image();
-                    imageObj.img = img;
-                    img.src = src;
-
-                    proxyGetImage( img.src, img, imageObj );
-                    return;
-                }
             }
 
 
@@ -2342,13 +2284,6 @@ _html2canvas.Preload = function( options ) {
                         }
                     }.bind(imageObj);
                     img.customComplete();
-
-                } else if ( options.proxy ) {
-                    imageObj = images[src] = {
-                        img: img
-                    };
-                    images.numTotal++;
-                    proxyGetImage( src, img, imageObj );
                 }
             }
 
@@ -2360,26 +2295,6 @@ _html2canvas.Preload = function( options ) {
                     h2clog("html2canvas: Cleanup because: " + cause);
                 } else {
                     h2clog("html2canvas: Cleanup after timeout: " + options.timeout + " ms.");
-                }
-
-                for (src in images) {
-                    if (images.hasOwnProperty(src)) {
-                        img = images[src];
-                        if (typeof img === "object" && img.callbackname && img.succeeded === undefined) {
-                            // cancel proxy image request
-                            window[img.callbackname] = undefined; // to work with IE<9  // NOTE: that the undefined callback property-name still exists on the window object (for IE<9)
-                            try {
-                                delete window[img.callbackname];  // for all browser that support this
-                            } catch(ex) {}
-                            if (img.script && img.script.parentNode) {
-                                img.script.setAttribute("src", "about:blank");  // try to cancel running request
-                                img.script.parentNode.removeChild(img.script);
-                            }
-                            images.numLoaded++;
-                            images.numFailed++;
-                            h2clog("html2canvas: Cleaned up failed img: '" + src + "' Steps: " + images.numLoaded + " / " + images.numTotal);
-                        }
-                    }
                 }
 
                 // cancel any pending requests
@@ -2562,10 +2477,9 @@ html2canvas = function( elements, opts ) {
         elements: elements,
 
         // preload options
-        proxy: "http://html2canvas.appspot.com/",
         timeout: 0,    // no timeout
-        useCORS: false, // try to load images as CORS (where available), before falling back to proxy
-        allowTaint: false, // whether to allow images to taint the canvas, won't need proxy if set to true
+        useCORS: false, // try to load images as CORS (where available)
+        allowTaint: false, // whether to allow images to taint the canvas
 
         // parse options
         svgRendering: false, // use svg powered rendering where available (FF11+)
